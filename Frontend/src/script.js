@@ -1,28 +1,7 @@
-const cards = {
-  backlog: [],
-  todo: [],
-  inProgress: [],
-  blocked: [],
-  done: [],
-}
 
-function saveStateToLocalStorage() {
-  localStorage.setItem('cardsState', JSON.stringify(cards));
-}
 
-function loadStateFromLocalStorage() {
-  const savedState = localStorage.getItem('cardsState');
-  if (savedState) {
-    Object.assign(cards, JSON.parse(savedState));
-    Object.keys(cards).forEach((columnKey, index) => {
-      updateCards(index + 1, cards[columnKey]);
-    });
-  }
-}
 
-document.addEventListener('DOMContentLoaded', () => {
-  loadStateFromLocalStorage();
-});
+const columnNames = ["backlog", "todo", "inProgress", "blocked", "done"]
 
 const columns = [document.getElementById("backlog"),
 document.getElementById("todo"),
@@ -72,67 +51,75 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-function createCard({ title, description, assigned, priority, state, deadline }) {
-  const id = crypto.randomUUID();
+async function createCard({ title, description, assigned, priority, status, deadline }) {
 
-  const column = Object.keys(cards).indexOf(state) + 1;
+  const column = columnNames.indexOf(status);
+  console.log(title);
 
-  cards[state].push({ id, title, description, assigned, priority, state, deadline });
+  await postCard({title, description, assigned, priority, status, deadline });
 
-  updateCards(column, cards[state]);
+  updateCards(column);
 }
 
-function updateCards(columnIndex, cards) {
-  console.log(columnIndex, cards);
+function sortByOrder(tasksArray) {
+  return tasksArray.sort((a, b) => a.order - b.order);
+}
 
-  const col = columns[columnIndex - 1];
+async function updateCards(columnIndex) {
+  console.log(columnIndex);
+  const col = columns[columnIndex];
   const previousCards = col.querySelectorAll(".draggable");
   previousCards.forEach(element => element.remove());
 
-  cards.forEach((card) => {
-    const cardTemplate = document.querySelector("#card");
+  let currentCards = await getCardsByStatus(columnNames[columnIndex]);
+  //currentCards = sortByOrder(tasksArray);
 
-    const h = cardTemplate.content.querySelector("h5");
-    const p = cardTemplate.content.querySelector("p");
-    const editIcon = cardTemplate.content.querySelector("figure");
-    const prioritySpan = cardTemplate.content.querySelector(".priority");
-    const deadlineSpan = cardTemplate.content.querySelector(".deadline");
+  if (currentCards && typeof currentCards[Symbol.iterator] === 'function') {
+    currentCards = sortByOrder(currentCards);
+    currentCards.forEach((card) => {
+      const cardTemplate = document.querySelector("#card");
 
-    const translatedPriority = card.priority;
+      const h = cardTemplate.content.querySelector("h5");
+      const p = cardTemplate.content.querySelector("p");
+      const editIcon = cardTemplate.content.querySelector("figure");
+      const prioritySpan = cardTemplate.content.querySelector(".priority");
+      const deadlineSpan = cardTemplate.content.querySelector(".deadline");
 
-    h.textContent = card.title;
-    p.textContent = card.description;
+      const translatedPriority = card.priority;
 
-    // Configurar el texto y el ícono de prioridad
-    prioritySpan.innerHTML = `
-      Prioridad: ${translatedPriority}
-      <img src="assets/Icon-Flag.png" alt="Priority flag icon">`;
+      h.textContent = card.title;
+      p.textContent = card.description;
 
-    // Configurar el texto y el ícono de fecha límite
-    deadlineSpan.innerHTML = `
-      Fecha: ${card.deadline}
-      <img src="assets/Icon-Calendar.png" alt="Calendar icon">`;
+      // Configurar el texto y el ícono de prioridad
+      prioritySpan.innerHTML = `
+        Prioridad: ${translatedPriority}
+        <img src="assets/Icon-Flag.png" alt="Priority flag icon">`;
 
-    const clone = document.importNode(cardTemplate.content, true);
+      // Configurar el texto y el ícono de fecha límite
+      deadlineSpan.innerHTML = `
+        Fecha: ${card.endDate}
+        <img src="assets/Icon-Calendar.png" alt="Calendar icon">`;
 
-    const div = clone.querySelector("div");
-    const h5 = div.querySelector("h5");
-    const paragraph = div.querySelector("p");
+      const clone = document.importNode(cardTemplate.content, true);
 
-    div.classList.add(backgroundColors[columnIndex - 1]);
-    h5.classList.add(fontColors[columnIndex - 1]);
-    paragraph.classList.add(fontColors[columnIndex - 1]);
+      const div = clone.querySelector("div");
+      const h5 = div.querySelector("h5");
+      const paragraph = div.querySelector("p");
 
-    div.draggable = true;
-    div.id = card.id;
+      div.classList.add(backgroundColors[columnIndex]);
+      h5.classList.add(fontColors[columnIndex]);
+      paragraph.classList.add(fontColors[columnIndex]);
 
-    editIcon.id = "edit" + card.id;
+      div.draggable = true;
+      div.id = card.id;
 
-    col.appendChild(clone);
-  });
+      editIcon.id = "edit" + card.id;
+
+      col.appendChild(clone);
+    });
+  }
 
   reAddEvents();
-  saveStateToLocalStorage();
 }
 
 const handleCardSave = () => {
@@ -140,7 +127,7 @@ const handleCardSave = () => {
   const description = document.getElementById("description");
   const assigned = document.getElementById("assigned");
   const priority = document.getElementById("priority");
-  const state = document.getElementById("state");
+  const status = document.getElementById("state");
   const deadline = document.getElementById("deadline");
 
   const esValidoTitle = validarTitleModal(title.value);
@@ -156,7 +143,7 @@ const handleCardSave = () => {
     description: description.value,
     assigned: assigned.value,
     priority: priority.value,
-    state: state.value,
+    status: status.value,
     deadline: deadline.value,
   });
 
@@ -164,7 +151,7 @@ const handleCardSave = () => {
   description.value = "";
   assigned.value = "";
   priority.value = "Alta";
-  state.value = "backlog";
+  status.value = "backlog";
   deadline.value = "";
 
   closeAllModals();
@@ -235,3 +222,9 @@ function validarDeadLineModal(deadLine) {
     return true;
   }
 }
+
+updateCards(0);
+updateCards(1);
+updateCards(2);
+updateCards(3);
+updateCards(4);

@@ -1,25 +1,8 @@
 let currentCard;
 
-function findCardById(cards, id) {
-
-  console.log(cards);
-
-  for (const state in cards) {
-    if (cards[state].length > 0) {
-      console.log(cards[state], id);
-      const card = cards[state].find(card => card.id === id);
-
-      if (card) {
-        return card;
-      }
-    }
-  }
-
-  return null;
-}
 
 
-function clickCard(card) {
+async function clickCard(card) {
   const modal = document.getElementById("edit-card");
   modal.classList.add("is-active");
 
@@ -27,25 +10,25 @@ function clickCard(card) {
   const description = document.getElementById("edit-description");
   const assigned = document.getElementById("edit-assigned");
   const priority = document.getElementById("edit-priority");
-  const state = document.getElementById("edit-state");
+  const status = document.getElementById("edit-state");
   const deadline = document.getElementById("edit-deadline");
 
-  currentCard = findCardById(cards, card.id);
-
+  currentCard = await getCardById(card.id);
   title.value = currentCard.title;
   description.value = currentCard.description;
-  assigned.value = currentCard.assigned;
+  assigned.value = currentCard.assignedTo;
   priority.value = currentCard.priority;
-  state.value = currentCard.state;
-  deadline.value = currentCard.deadline;
+  status.value = currentCard.status;
+
+  deadline.value = currentCard.endDate;
 }
 
-const handleCardSaveEdit = () => {
+const handleCardSaveEdit = async () => {
   const title = document.getElementById("edit-title");
   const description = document.getElementById("edit-description");
   const assigned = document.getElementById("edit-assigned");
   const priority = document.getElementById("edit-priority");
-  const state = document.getElementById("edit-state");
+  const status = document.getElementById("edit-state");
   const deadline = document.getElementById("edit-deadline");
 
   const esValidoTitle = validarTitleModal(title.value);
@@ -58,24 +41,28 @@ const handleCardSaveEdit = () => {
 
   const previousCard = { ...currentCard };
 
+  currentCard.id = previousCard.id;
   currentCard.title = title.value;
   currentCard.description = description.value;
   currentCard.assigned = assigned.value;
   currentCard.priority = priority.value;
-  currentCard.state = state.value;
+  currentCard.status = status.value;
   currentCard.deadline = deadline.value;
 
-  cards[previousCard.state] = cards[previousCard.state].filter(card => card.id !== previousCard.id);
-  cards[state.value].push(currentCard);
+  await putCard(currentCard);
+  console.log(previousCard.status);
+  console.log(currentCard.status);
 
-  updateCards(Object.keys(cards).indexOf(previousCard.state) + 1, cards[previousCard.state]);
-  updateCards(Object.keys(cards).indexOf(state.value) + 1, cards[state.value]);
+  updateCards(columnNames.indexOf(previousCard.status));
+  updateCards(columnNames.indexOf(currentCard.status));
+  
+  
 
   title.value = "";
   description.value = "";
   assigned.value = "";
-  priority.value = "Alta";
-  state.value = "backlog";
+  priority.value = "High";
+  status.value = "backlog";
   deadline.value = "";
 
   closeAllModals();

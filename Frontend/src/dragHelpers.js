@@ -65,19 +65,13 @@ function dragDrop(e) {
   const draggedCard = dragSrcEl;
   const targetCard = this;
 
-  const isAfter = offset > bounding.height / 2;
-
-  if (isAfter) {
-    targetCard.insertAdjacentElement('afterend', draggedCard);
-  } else {
-    targetCard.insertAdjacentElement('beforebegin', draggedCard);
-  }
+  
 
   this.classList.remove('over');
 
   const targetColumnId = this.closest('.column').id;
 
-  moveCard(draggedCard.id, targetColumnId, targetCard.id, isAfter);
+  moveCard(draggedCard.id, targetColumnId, targetCard.id);
 }
 
 function addEventsDragAndDrop(el) {
