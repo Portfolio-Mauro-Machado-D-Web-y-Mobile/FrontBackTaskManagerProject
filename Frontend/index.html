@@ -12,7 +12,7 @@
 <body class="has-text-black">
   <div style="position: relative;">
     <h1 class="title has-text-black has-text-centered mt-5">
-      GESTOR DE TAREAS
+      TASK MANAGER
     </h1>
     <button class="button mb-5" id="toggle-dark-mode">
       <span class="icon is-small">
@@ -22,7 +22,7 @@
   </div>
   <div class="interstice is-flex is-justify-content-end pr-3">
     <button class="interstice js-modal-trigger button mb-5" data-target="modal-js-example">
-      Agregar tarea
+      Add Task
     </button>
   </div>
   <div class="columns">
@@ -97,26 +97,26 @@
       </header>
       <form class="modal-card-body">
         <div class="control">
-          <label class="label">Nombre de la tarea</label>
+          <label class="label">Title</label>
           <input class="input" id="title" type="text" placeholder="Text input">
           <span id="errorTitle" class="error"></span>
         </div>
         <div class="field">
-          <label class="label">Descripción de la tarea</label>
+          <label class="label">Description</label>
           <div class="control">
             <textarea id="description" class="input" placeholder="Textarea"></textarea>
             <span id="errorDescription" class="error"></span>
           </div>
         </div>
         <div class="field">
-          <label class="label">Asignado</label>
+          <label class="label">Assigned To</label>
           <div class="control">
             <input type="text" id="assigned" class="input">
           </div>
         </div>
         <div class="field is-flex is-justify-content-space-between">
           <div class="control">
-            <label class="label">Estado</label>
+            <label class="label">Status</label>
             <div class="select">
               <select id="state">
                 <option value="backlog">Backlog</option>
@@ -128,7 +128,7 @@
             </div>
           </div>
           <div class="field">
-            <label class="label">Prioridad</label>
+            <label class="label">Priority</label>
             <div class="control">
               <div class="select">
                 <select id="priority">
@@ -141,7 +141,7 @@
           </div>
         </div>
         <div class="field">
-          <label class="label">Fecha Límite</label>
+          <label class="label">End Date</label>
           <div class="control">
             <input id="deadline" class="input" type="date">
             <span id="errorDeadLine" class="error"></span>
@@ -150,8 +150,8 @@
 
         </section>
         <footer class="py-2 is-flex is-justify-content-space-between">
-          <button onclick="handleCardCancel()" type="button" class="button">Cancelar</button>
-          <button onclick="handleCardSave()" type="button" class="button is-success">Guardar cambios</button>
+          <button onclick="handleCardCancel()" type="button" class="button">Cancel</button>
+          <button onclick="handleCardSave()" type="button" class="button is-success">Save</button>
         </footer>
       </form>
     </div>
@@ -161,31 +161,31 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Editar Tarea</p>
+        <p class="modal-card-title">Edit Task</p>
         <button onclick="handleCardCancel()" class="delete" aria-label="close"></button>
       </header>
       <form class="modal-card-body">
-        <label class="label">Nombre de la tarea</label>
+        <label class="label">Title</label>
         <div class="control">
           <input class="input" id="edit-title" type="text" placeholder="Text input">
           <span id="edit-errorTitle" class="error"></span>
         </div>
         <div class="field">
-          <label class="label">Descripción de la tarea</label>
+          <label class="label">Description</label>
           <div class="control">
             <textarea id="edit-description" class="input" placeholder="Textarea"></textarea>
             <span id="edit-errorDescription" class="error"></span>
           </div>
         </div>
         <div class="field">
-          <label class="label">Asignado</label>
+          <label class="label">Assinged To</label>
           <div class="control">
             <input type="text" id="edit-assigned" class="input">
           </div>
         </div>
         <div class="field is-flex is-justify-content-space-between">
           <div class="field">
-            <label class="label">Estado</label>
+            <label class="label">Status</label>
             <div class="control">
               <div class="select">
                 <select id="edit-state">
@@ -200,7 +200,7 @@
           </div>
 
           <div class="field">
-            <label class="label">Prioridad</label>
+            <label class="label">Priority</label>
             <div class="control">
               <div class="select">
                 <select id="edit-priority">
@@ -213,7 +213,7 @@
           </div>
         </div>
         <div class="field">
-          <label class="label">Fecha Límite</label>
+          <label class="label">End Date</label>
           <div class="control">
             <input id="edit-deadline" class="input" type="date">
             <span id="edit-errorDeadLine" class="error"></span>
@@ -238,12 +238,12 @@
             <img src="assets/Icon-Flag.png" alt="Priority flag icon"> Alta
           </figure>
         </span>
-        <h5 class="title is-size-5">Título de la Tarea</h5>
+        <h5 class="title is-size-5">Title</h5>
       </div>
       <figure class="image is-20x20 edit-icon">
         <img src="assets/edit.png" alt="Description of image">
       </figure>
-      <p class="description is-size-6">Descripción de la tarea</p>
+      <p class="description is-size-6">Description/p>
       <div class="card-footer">
         <span class="deadline text-highlight">
           <figure class="image is-16x16">

@@ -68,10 +68,11 @@ const handleCardSaveEdit = async () => {
   closeAllModals();
 }
 
-const handleCardDelete = () => {
-  cards[currentCard.state] = cards[currentCard.state].filter(card => card.id !== currentCard.id);
+const handleCardDelete = async () => {
+  const response = await deleteCardById(currentCard.id);
 
-  updateCards(Object.keys(cards).indexOf(currentCard.state) + 1, cards[currentCard.state]);
+  updateCards(columnNames.indexOf(currentCard.status));
+  console.log(columnNames.indexOf(currentCard.status));
 
   closeAllModals();
 }

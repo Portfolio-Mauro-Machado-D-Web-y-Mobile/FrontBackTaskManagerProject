@@ -92,12 +92,12 @@ async function updateCards(columnIndex) {
 
       // Configurar el texto y el ícono de prioridad
       prioritySpan.innerHTML = `
-        Prioridad: ${translatedPriority}
+        Priority: ${translatedPriority}
         <img src="assets/Icon-Flag.png" alt="Priority flag icon">`;
 
       // Configurar el texto y el ícono de fecha límite
       deadlineSpan.innerHTML = `
-        Fecha: ${card.endDate}
+        End Date: ${card.endDate}
         <img src="assets/Icon-Calendar.png" alt="Calendar icon">`;
 
       const clone = document.importNode(cardTemplate.content, true);

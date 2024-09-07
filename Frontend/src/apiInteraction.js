@@ -45,3 +45,11 @@ async function putCard(card) {
 
     return response.json();
 }
+
+async function deleteCardById(id) {
+    const response = await fetch(`${API_URL}/tasks/${id}`, {
+        method: `DELETE`
+    });
+
+    return response;
+}
